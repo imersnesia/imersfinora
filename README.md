@@ -1,8 +1,14 @@
-# iMersFinora FINAL CLEAN INSTALLER v1.5
+# iMersFinora FINAL CLEAN INSTALLER v1.6
+Premium personal/family finance PWA, Next.js + Supabase.
 
-Fresh client: run `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql` once.
-Existing v1.3/v1.4 database: no SQL migration is required for v1.5.
+## Existing v1.5 install
+Replace source with v1.6 and redeploy. No SQL upgrade required.
 
-Supabase configuration accepts either the current publishable-key naming or legacy anon-key naming. See `.env.example`.
+## Fresh client
+Run only `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`, configure Vercel public Supabase environment variables, deploy `supabase/functions/finora-api/index.ts`, then deploy the Next.js project.
 
-Edge Functions remain a single function: `supabase/functions/finora-api/index.ts`.
+## PWA
+Manifest, 192/512 icons, service worker, standalone mode and offline page are included.
+
+## Themes
+10 presets + custom primary color. Theme preference is stored in the user's Supabase profile and cached locally for fast PWA startup.
