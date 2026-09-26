@@ -493,3 +493,10 @@ begin
 end;$$;
 revoke all on function public.bootstrap_my_workspace() from public;
 grant execute on function public.bootstrap_my_workspace() to authenticated;
+
+-- v1.15 PostgREST privileges (RLS remains authoritative)
+grant usage on schema public to authenticated;
+grant select, insert, update, delete on table public.profiles, public.families, public.family_members, public.family_invites, public.accounts, public.categories, public.transactions, public.wallet_ledger, public.wa_gateway_settings, public.telegram_settings, public.notification_recipients, public.notifications, public.audit_logs to authenticated;
+grant select, insert, update, delete on table public.bot_inbox, public.transaction_attachments to authenticated;
+grant execute on function public.bootstrap_my_workspace() to authenticated;
+grant execute on function public.ensure_default_account(uuid) to authenticated;

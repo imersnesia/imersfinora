@@ -1,7 +1,7 @@
-# iMersFinora v1.14
-- Corrected product model: one installation is one family, not a SaaS workspace.
-- Family context is created automatically in the backend on first authenticated use.
-- First financial account is automatically created as Cash / Tunai.
-- Accounts page no longer asks the user to create a workspace.
-- Family remains the member/permission area; Accounts remains wallets/banks/e-wallets.
-- WhatsApp/Telegram integrations remain optional; web/PWA transaction entry remains independent.
+# iMersFinora v1.15
+
+- Fixed `permission denied for table families` on authenticated PostgREST requests.
+- Added the missing authenticated table privileges while keeping RLS active.
+- Family context remains automatic/internal; user never creates a workspace manually.
+- Accounts continues to mean financial sources: Cash, bank accounts, and e-wallets.
+- Fresh installer includes the same permission fix.
