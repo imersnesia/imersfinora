@@ -9,7 +9,7 @@ Fresh installer for a new client / new Supabase project.
 - Theme preference fields for 10-theme engine + custom colors
 - WhatsApp settings (Fonnte / StarSender)
 - Telegram Bot settings
-- Separated Edge Functions: send-whatsapp, send-telegram, process-reminders
+- Separated Edge Functions: finora-api, finora-api, finora-api
 - No client gateway token hardcoded
 
 ## Fresh Installation
@@ -22,3 +22,6 @@ Fresh installer for a new client / new Supabase project.
 7. Configure WhatsApp/Telegram from the application web Settings.
 
 Do not run old experimental iMersFinora SQL on a fresh installation.
+
+## Vercel build note (v1.2)
+Supabase Edge Functions run on Deno and are intentionally excluded from Next.js TypeScript compilation. Deploy `supabase/functions/finora-api/index.ts` to Supabase Edge Functions separately. Vercel builds only the Next.js/PWA frontend.

@@ -5,9 +5,9 @@ Run `00_FULL_FRESH_INSTALL_IMERSFINORA.sql` once on a NEW project, then run `01_
 
 ## Edge Functions
 Create/deploy each function independently using the included folder and its own `index.ts`:
-- `send-whatsapp`
-- `send-telegram`
-- `process-reminders`
+- `finora-api`
+- `finora-api`
+- `finora-api`
 
 `_shared` contains common helpers.
 
