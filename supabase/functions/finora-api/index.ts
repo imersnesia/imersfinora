@@ -22,6 +22,53 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ ok: false, error: 'METHOD_NOT_ALLOWED' }, 405)
 
   try {
+    const url = new URL(req.url)
+    const hook = url.searchParams.get('hook')
+    if (hook === 'whatsapp' || hook === 'telegram') {
+      const familyId = url.searchParams.get('family') || ''
+      const secret = url.searchParams.get('secret') || ''
+      if (!familyId || !secret) return json({ok:false,error:'INVALID_WEBHOOK'},401)
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+      const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+      const admin = createClient(supabaseUrl, serviceRoleKey)
+      const table = hook === 'telegram' ? 'telegram_settings' : 'wa_gateway_settings'
+      const {data:cfg} = await admin.from(table).select('*').eq('family_id',familyId).maybeSingle()
+      if (!cfg?.bot_enabled || cfg.webhook_secret !== secret) return json({ok:false,error:'BOT_DISABLED_OR_SECRET_INVALID'},403)
+      const payload:any = await req.json()
+      let sender='', textMsg='', mediaUrl=''
+      if (hook === 'telegram') {
+        const m=payload?.message||payload?.edited_message||{}
+        sender=String(m?.chat?.id||''); textMsg=String(m?.text||m?.caption||'').trim()
+        const photos=m?.photo||[]
+        if(photos.length&&cfg.bot_token_encrypted){const fileId=photos[photos.length-1]?.file_id;const fr=await fetch(`https://api.telegram.org/bot${cfg.bot_token_encrypted}/getFile?file_id=${fileId}`);const fj=await fr.json();if(fj?.result?.file_path)mediaUrl=`https://api.telegram.org/file/bot${cfg.bot_token_encrypted}/${fj.result.file_path}`}
+      } else {
+        sender=cleanPhone(payload?.sender||payload?.from||payload?.phone||payload?.data?.sender||payload?.data?.from)
+        textMsg=String(payload?.message||payload?.text||payload?.caption||payload?.data?.message||'').trim()
+        mediaUrl=String(payload?.url||payload?.file||payload?.media||payload?.data?.url||'').trim()
+      }
+      if(!sender) return json({ok:true,ignored:'NO_SENDER'})
+      let q=admin.from('notification_recipients').select('user_id,phone,telegram_chat_id').eq('family_id',familyId)
+      q=hook==='telegram'?q.eq('telegram_chat_id',sender):q.eq('phone',sender)
+      const {data:recipient}=await q.maybeSingle()
+      if(!recipient?.user_id) return json({ok:true,ignored:'SENDER_NOT_LINKED'})
+      let storedMedia:string|null=null
+      if(mediaUrl){try{const mr=await fetch(mediaUrl);if(mr.ok){const blob=await mr.blob();const ext=(blob.type.split('/')[1]||'jpg').replace('jpeg','jpg');const path=`${familyId}/${recipient.user_id}/bot-${Date.now()}.${ext}`;const up=await admin.storage.from('finora-receipts').upload(path,blob,{contentType:blob.type||'image/jpeg'});if(!up.error)storedMedia=path}}catch(_){storedMedia=mediaUrl}}
+      const {data:inbox}=await admin.from('bot_inbox').insert({family_id:familyId,user_id:recipient.user_id,channel:hook,external_sender:sender,message_text:textMsg||null,media_url:storedMedia,raw_payload:payload,status:'received'}).select('id').single()
+      const lower=textMsg.toLowerCase(); const nums=(lower.match(/[0-9][0-9.,]*/g)||[]); let amount=0
+      if(nums.length){let raw=nums[0].replace(/\./g,'').replace(/,/g,'');amount=Number(raw);if(/\b(jt|juta)\b/.test(lower))amount*=1000000;else if(/\b(rb|ribu|k)\b/.test(lower))amount*=1000}
+      const type=/\b(gaji|masuk|income|pemasukan|terima)\b/.test(lower)?'income':'expense'
+      const {data:accounts}=await admin.from('accounts').select('id,name,current_balance').eq('family_id',familyId).eq('is_active',true).order('created_at')
+      const account=(accounts||[]).find((a:any)=>lower.includes(String(a.name).toLowerCase()))||(accounts||[])[0]
+      const reply=async(message:string)=>{if(hook==='telegram'&&cfg.bot_token_encrypted)await fetch(`https://api.telegram.org/bot${cfg.bot_token_encrypted}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:sender,text:message})});if(hook==='whatsapp'&&cfg.api_key_encrypted){if(cfg.provider==='fonnte'){const f=new FormData();f.append('target',sender);f.append('message',message);await fetch('https://api.fonnte.com/send',{method:'POST',headers:{Authorization:cfg.api_key_encrypted},body:f})}else await fetch('https://api.starsender.online/api/send',{method:'POST',headers:{'Content-Type':'application/json',Authorization:cfg.api_key_encrypted},body:JSON.stringify({messageType:'text',to:sender,body:message})})}}
+      if(/^saldo\b/.test(lower)){const total=(accounts||[]).reduce((n:number,a:any)=>n+Number(a.current_balance||0),0);await reply(`💰 Total saldo: Rp${Math.round(total).toLocaleString('id-ID')}`);if(inbox)await admin.from('bot_inbox').update({status:'processed'}).eq('id',inbox.id);return json({ok:true,action:'balance'})}
+      if(!amount||!account){if(inbox)await admin.from('bot_inbox').update({status:'pending_amount'}).eq('id',inbox.id);await reply(storedMedia?'📷 Foto diterima. Tambahkan nominal/keterangan pada caption, contoh: "75rb makan cash".':'Ketik contoh: "75rb makan cash", "gaji 8jt BCA", atau "saldo".');return json({ok:true,pending:true})}
+      const {data:txId,error:txErr}=await admin.rpc('bot_post_transaction',{p_family_id:familyId,p_user_id:recipient.user_id,p_account_id:account.id,p_type:type,p_amount:amount,p_description:textMsg||'Transaksi via bot',p_receipt_url:storedMedia,p_metadata:{source:hook,bot_inbox_id:inbox?.id}})
+      if(txErr)throw txErr
+      if(inbox)await admin.from('bot_inbox').update({status:'processed',transaction_id:txId}).eq('id',inbox.id)
+      await reply(`✅ ${type==='income'?'Pemasukan':'Pengeluaran'} Rp${Math.round(amount).toLocaleString('id-ID')} tercatat ke ${account.name}.`)
+      return json({ok:true,transaction_id:txId})
+    }
+
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) return json({ ok: false, error: 'UNAUTHORIZED' }, 401)
 
@@ -41,12 +88,12 @@ Deno.serve(async (req) => {
 
     const { data: membership } = await admin
       .from('family_members')
-      .select('role,status')
+      .select('role')
       .eq('family_id', familyId)
       .eq('user_id', user.id)
       .maybeSingle()
 
-    if (!membership || membership.status !== 'active') return json({ ok: false, error: 'FORBIDDEN' }, 403)
+    if (!membership) return json({ ok: false, error: 'FORBIDDEN' }, 403)
 
     const requireAdmin = () => {
       if (!['owner', 'admin'].includes(String(membership.role))) throw new Error('ADMIN_REQUIRED')
