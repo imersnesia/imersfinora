@@ -1,14 +1,22 @@
-# iMersFinora FINAL CLEAN INSTALLER v1.6
-Premium personal/family finance PWA, Next.js + Supabase.
+# iMersFinora v1.7 — Functional Core
 
-## Existing v1.5 install
-Replace source with v1.6 and redeploy. No SQL upgrade required.
+Premium Personal & Family Finance PWA.
 
-## Fresh client
-Run only `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`, configure Vercel public Supabase environment variables, deploy `supabase/functions/finora-api/index.ts`, then deploy the Next.js project.
+## Existing v1.6 installation
+Run once: `supabase/upgrade/UPGRADE_v1.6_TO_v1.7.sql`, then replace the web source and redeploy.
 
-## PWA
-Manifest, 192/512 icons, service worker, standalone mode and offline page are included.
+## New client / fresh installation
+Run only: `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`.
+Do not run historical upgrade SQL files on a fresh install.
 
-## Themes
-10 presets + custom primary color. Theme preference is stored in the user's Supabase profile and cached locally for fast PWA startup.
+## Core active in v1.7
+- Supabase Auth + automatic workspace bootstrap
+- Family/Workspace + owner/admin/partner/member/child/viewer roles
+- Invite/add family member by email
+- Accounts/wallets with opening balance
+- Income, expense, and account-to-account transfer via ledger RPC
+- Default finance categories
+- Transaction history
+- Premium PWA shell + installable manifest/service worker
+- 10 themes/custom appearance foundation
+- One Edge Function: `finora-api` (Fonnte, StarSender, Telegram)

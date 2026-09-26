@@ -1,12 +1,14 @@
-# iMersFinora v1.6.0
+# iMersFinora v1.7
 
-## Premium Wallet UI Rebuild
-- Total rebuild presentation layer menjadi PWA e-wallet mobile-first.
-- Hero wallet balance, quick actions, account rail, monthly summary, recent transactions.
-- Floating mobile bottom navigation dan responsive desktop shell.
-- Halaman Transactions dan Insights baru.
-- Theme Engine: Finora, Midnight, Ocean, Emerald, Sunset, Royal, Rose, Minimal, Aurora, Carbon.
-- Custom primary color dan penyimpanan preferensi ke profile Supabase + local fallback.
-- Login UI diselaraskan dengan bahasa visual wallet.
-- Backend, schema, RLS, Auth, PWA service worker dan finora-api dipertahankan.
-- Tidak membutuhkan SQL upgrade dari v1.5 ke v1.6.
+Functional-core release after v1.6 UI rebuild.
+
+- Activated transaction creation: income, expense, transfer.
+- Added Accounts management.
+- Added Family/Workspace management and member invite flow.
+- Added Partner and Child roles.
+- Added pending family invitations for emails not yet registered.
+- Workspace bootstrap now accepts pending invite before creating a new workspace.
+- Added default categories.
+- Added Settings hub and updated five-item mobile navigation.
+- Existing v1.6 database requires `UPGRADE_v1.6_TO_v1.7.sql` once.
+- Fresh clients use one full SQL installer only.
