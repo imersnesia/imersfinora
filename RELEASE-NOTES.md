@@ -1,4 +1,10 @@
-# iMersFinora v1.10.0
+# iMersFinora v1.11
+
+- Fixed invalid CSS declaration that caused Next.js/Vercel webpack CSS build failure.
+- No database schema changes. No SQL upgrade required from v1.10.
+- Full source package retained as clean installer.
+
+# iMersFinora v1.11.0
 
 - Full UI consistency pass across all current routes.
 - Unified premium wallet fields, buttons, cards, headers, tabs, states and responsive spacing.
