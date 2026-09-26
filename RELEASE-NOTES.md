@@ -1,7 +1,10 @@
-# iMersFinora v1.4.0
+# iMersFinora v1.5.0
 
-- Fixed Vercel/Next.js prerender failure: `supabaseKey is required`.
-- Supabase browser client is now lazy-created only at browser runtime, never at module import or render/prerender time.
-- Existing v1.3 database requires no SQL migration for this release.
-- Fresh clients still use the single full fresh installer SQL.
-- PWA files, single `finora-api` Edge Function, Fonnte, StarSender and Telegram integration remain included.
+- Fixed runtime Supabase configuration handling.
+- Supports Supabase publishable-key and legacy anon-key environment variable names.
+- Added runtime `/api/supabase-config` fallback so configuration is not tied to prerender/import time.
+- Fixed `/` client-side exception when configuration cannot be resolved.
+- Login now initializes Supabase at browser runtime and reports real auth/bootstrap errors.
+- Existing database from v1.3/v1.4 requires no SQL migration for this release.
+- PWA assets, manifest and service worker retained.
+- Single `finora-api` Edge Function retained.
