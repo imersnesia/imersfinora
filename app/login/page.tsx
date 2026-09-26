@@ -1,0 +1,1 @@
+export default function Login(){return <main className='center'><div className='card'><span className='pill'>iMersFinora</span><h1>Welcome back</h1><p>Authentication UI shell. Connect Supabase Auth after fresh database installation.</p><input placeholder='Email'/><input placeholder='Password' type='password'/><button>Sign in</button></div></main>}
