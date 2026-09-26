@@ -1,15 +1,15 @@
-# iMersFinora v1.7 — Functional Core
+# iMersFinora v1.8 — Functional Core
 
 Premium Personal & Family Finance PWA.
 
 ## Existing v1.6 installation
-Run once: `supabase/upgrade/UPGRADE_v1.6_TO_v1.7.sql`, then replace the web source and redeploy.
+Run once: `supabase/upgrade/UPGRADE_v1.6_TO_v1.8.sql`, then replace the web source and redeploy.
 
 ## New client / fresh installation
 Run only: `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`.
 Do not run historical upgrade SQL files on a fresh install.
 
-## Core active in v1.7
+## Core active in v1.8
 - Supabase Auth + automatic workspace bootstrap
 - Family/Workspace + owner/admin/partner/member/child/viewer roles
 - Invite/add family member by email

@@ -1,4 +1,4 @@
-# iMersFinora v1.7
+# iMersFinora v1.8
 
 Functional-core release after v1.6 UI rebuild.
 
@@ -10,5 +10,5 @@ Functional-core release after v1.6 UI rebuild.
 - Workspace bootstrap now accepts pending invite before creating a new workspace.
 - Added default categories.
 - Added Settings hub and updated five-item mobile navigation.
-- Existing v1.6 database requires `UPGRADE_v1.6_TO_v1.7.sql` once.
+- Existing v1.6 database requires `UPGRADE_v1.6_TO_v1.8.sql` once.
 - Fresh clients use one full SQL installer only.
