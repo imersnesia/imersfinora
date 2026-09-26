@@ -11,7 +11,7 @@ export default function Accounts(){
  const w=useWorkspace(); const [rows,setRows]=useState<any[]>([]); const [name,setName]=useState(''); const [type,setType]=useState('bank'); const [balance,setBalance]=useState('0'); const [msg,setMsg]=useState(''); const [loading,setLoading]=useState(true); const [error,setError]=useState('')
  const load=useCallback(async()=>{
    if(w.loading)return
-   if(!w.family?.id){setLoading(false);setError('Workspace belum tersedia. Muat ulang halaman atau login kembali.');return}
+   if(!w.family?.id){setLoading(false);setError(w.error||'Data keluarga belum siap. Silakan coba lagi.');return}
    setLoading(true);setError('')
    try{
      const s=await getSupabase()

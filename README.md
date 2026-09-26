@@ -1,22 +1,8 @@
-# iMersFinora v1.13 — Functional Core
+# iMersFinora v1.14
+Single-family personal finance PWA built with Next.js + Supabase.
 
-Premium Personal & Family Finance PWA.
+## Product model
+One installation = one family. The first authenticated user becomes owner automatically. Family context is internal and requires no workspace setup. A Cash / Tunai financial account is created automatically when needed.
 
-## Existing v1.13 installation
-Run once: `supabase/upgrade/UPGRADE_v1.13_TO_v1.13.sql`, then replace the web source and redeploy.
-
-## New client / fresh installation
-Run only: `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`.
-Do not run historical upgrade SQL files on a fresh install.
-
-## Core active in v1.13
-- Supabase Auth + automatic workspace bootstrap
-- Family/Workspace + owner/admin/partner/member/child/viewer roles
-- Invite/add family member by email
-- Accounts/wallets with opening balance
-- Income, expense, and account-to-account transfer via ledger RPC
-- Default finance categories
-- Transaction history
-- Premium PWA shell + installable manifest/service worker
-- 10 themes/custom appearance foundation
-- One Edge Function: `finora-api` (Fonnte, StarSender, Telegram)
+## Upgrade from v1.13
+Run `supabase/upgrade/UPGRADE_v1.13_TO_v1.14.sql` in Supabase SQL Editor, then deploy the v1.14 frontend. WhatsApp/Telegram bots are optional; web/PWA transaction entry works without them.
