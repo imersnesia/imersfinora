@@ -1,0 +1,1 @@
+export default function Offline(){return <main className="center"><div className="card"><span className="eyebrow">iMersFinora</span><h1>Anda sedang offline</h1><p>Hubungkan internet untuk menyinkronkan data keuangan terbaru.</p></div></main>}

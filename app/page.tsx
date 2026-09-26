@@ -1,1 +1,5 @@
-export default function Home(){return <main className='shell'><section className='hero'><span className='pill'>iMersFinora • PWA</span><h1>Your money. Your family. One beautiful place.</h1><p>Fresh installer v1.0 is ready for Supabase connection. Theme Engine, finance modules and integrations are built on this clean foundation.</p><div className='actions'><a href='/login'>Open App</a><a className='ghost' href='/settings/integrations'>Integrations</a></div></section></main>}
+'use client'
+import {useEffect} from 'react'
+import {useRouter} from 'next/navigation'
+import {supabase} from '../lib/supabase'
+export default function Home(){const r=useRouter();useEffect(()=>{supabase.auth.getSession().then(({data})=>r.replace(data.session?'/app':'/login'))},[r]);return <main className="center"><div className="loader">iMersFinora</div></main>}

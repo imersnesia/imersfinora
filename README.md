@@ -1,27 +1,20 @@
-# iMersFinora — FINAL CLEAN INSTALLER v1.0
+# iMersFinora FINAL CLEAN INSTALLER v1.3
+Fresh installer Next.js + Supabase + installable PWA.
 
-Fresh installer for a new client / new Supabase project.
+## Existing v1.2 database
+Run only `supabase/upgrade/UPGRADE_v1.2_TO_v1.3.sql` once. Do NOT rerun the fresh installer.
 
-## Included
-- Next.js PWA-ready application shell
-- Supabase database schema, RLS and finance RPC foundation
-- Profiles, families, accounts, categories, transactions and ledger
-- Theme preference fields for 10-theme engine + custom colors
-- WhatsApp settings (Fonnte / StarSender)
-- Telegram Bot settings
-- Separated Edge Functions: finora-api, finora-api, finora-api
-- No client gateway token hardcoded
+## Fresh client
+Run `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql` once.
 
-## Fresh Installation
-1. Create a new Supabase project.
-2. Run `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`.
-3. Run `supabase/install/01_VERIFY_INSTALLATION.sql`.
-4. Deploy each Edge Function folder separately.
-5. Copy `.env.example` to `.env.local` and fill Supabase URL/key.
-6. Run `npm install`, `npm run build`, then deploy to Vercel.
-7. Configure WhatsApp/Telegram from the application web Settings.
+## Vercel ENV
+Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 
-Do not run old experimental iMersFinora SQL on a fresh installation.
+## Authentication
+Create user in Supabase Authentication. On first successful login the app calls `bootstrap_my_workspace()`, creates the missing profile/workspace, assigns that user as `owner` of their workspace, creates Main Wallet and integration settings.
 
-## Vercel build note (v1.2)
-Supabase Edge Functions run on Deno and are intentionally excluded from Next.js TypeScript compilation. Deploy `supabase/functions/finora-api/index.ts` to Supabase Edge Functions separately. Vercel builds only the Next.js/PWA frontend.
+## PWA
+Manifest, 192/512 icons, service worker registration, standalone display and offline fallback are included.
+
+## Edge Function
+Only `supabase/functions/finora-api/index.ts` is used: Fonnte, StarSender, Telegram.
