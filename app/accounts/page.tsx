@@ -15,13 +15,13 @@ export default function Accounts(){
    setLoading(true);setError('')
    try{
      const s=await getSupabase()
-     let q=await s.from('accounts').select('*').eq('family_id',w.family.id).eq('is_active',true).order('created_at')
+     let q=await s.rpc('get_my_accounts')
      if(q.error) throw q.error
      let data=q.data||[]
      if(data.length===0){
        const made=await s.rpc('ensure_default_account',{p_family_id:w.family.id})
        if(made.error) throw made.error
-       q=await s.from('accounts').select('*').eq('family_id',w.family.id).eq('is_active',true).order('created_at')
+       q=await s.rpc('get_my_accounts')
        if(q.error) throw q.error
        data=q.data||[]
      }
@@ -30,7 +30,7 @@ export default function Accounts(){
    finally{setLoading(false)}
  },[w.loading,w.family?.id])
  useEffect(()=>{load()},[load])
- async function add(e:any){e.preventDefault();if(!w.family?.id||!w.user?.id)return;setMsg('Menyimpan…');try{const s=await getSupabase();const {error}=await s.from('accounts').insert({family_id:w.family.id,owner_user_id:w.user.id,name:name.trim(),type,opening_balance:Number(balance||0),current_balance:Number(balance||0)});if(error)throw error;setMsg('Akun berhasil ditambahkan.');setName('');setBalance('0');await load()}catch(e:any){setMsg(e?.message||'Gagal menambah akun.')}}
+ async function add(e:any){e.preventDefault();if(!w.family?.id||!w.user?.id)return;setMsg('Menyimpan…');try{const s=await getSupabase();const {error}=await s.rpc('add_my_account',{p_name:name.trim(),p_type:type,p_opening_balance:Number(balance||0)});if(error)throw error;setMsg('Akun berhasil ditambahkan.');setName('');setBalance('0');await load()}catch(e:any){setMsg(e?.message||'Gagal menambah akun.')}}
  if(w.loading)return <main className="splash">Memuat…</main>
  return <main className="walletPage innerPage">
   <header className="pageHeader"><a href="/app">‹</a><div><small>WALLET</small><h1>Akun</h1></div><span/></header>
