@@ -1,21 +1,14 @@
-# iMersFinora v1.0 — Fresh Installation Guide
+# iMersFinora v1.18 — Installation Guide
 
-## Supabase
-Run `00_FULL_FRESH_INSTALL_IMERSFINORA.sql` once on a NEW project, then run `01_VERIFY_INSTALLATION.sql`.
+## Fresh install / client baru
+1. Buat project Supabase baru.
+2. Buka SQL Editor.
+3. Jalankan **hanya** `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`.
+4. Pastikan query selesai tanpa error. Self-verification otomatis berjalan di akhir file.
+5. Deploy Edge Function `finora-api`.
+6. Isi environment Supabase di Vercel lalu deploy frontend.
 
-## Edge Functions
-Create/deploy each function independently using the included folder and its own `index.ts`:
-- `finora-api`
-- `finora-api`
-- `finora-api`
+> Jangan jalankan file `supabase/upgrade/*` pada fresh install.
 
-`_shared` contains common helpers.
-
-## Web/PWA
-Copy `.env.example` to `.env.local`, set the public Supabase URL and anon/publishable key, install dependencies and build. The manifest is already included and the UI is mobile-first/PWA-ready.
-
-## Integration Credentials
-WhatsApp API token/endpoint and Telegram bot token/chat configuration are intended to be entered from the web Settings UI. Do not hardcode client credentials in source code. Edge Functions consume server-side configuration.
-
-## Important
-This package is the MASTER CLEAN fresh installer. Existing installations should use migrations/hotfixes rather than re-running the full installer.
+## Existing install
+Gunakan hanya file upgrade yang sesuai versi asal dan tujuan. Untuk v1.17 -> v1.18, **tidak perlu SQL update**.

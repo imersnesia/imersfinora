@@ -1,14 +1,14 @@
-# iMersFinora v1.17
+# iMersFinora v1.20
 
 ## CLIENT BARU / FRESH INSTALL
-1. Jalankan `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`
-2. Jalankan `supabase/install/01_VERIFY_INSTALLATION.sql`
-3. Deploy Edge Function `finora-api`
-4. Isi ENV Supabase di Vercel lalu deploy frontend.
+Jalankan SATU SQL saja:
+`supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`
 
-## CLIENT LAMA v1.16 -> v1.17
-Jalankan `supabase/upgrade/UPGRADE_v1.16_TO_v1.17.sql`, lalu deploy frontend v1.17.
-Edge Function: tidak perlu redeploy untuk fitur branding ini.
+## UPDATE / RECOVERY v1.19 -> v1.20
+Jalankan:
+`supabase/upgrade/UPGRADE_v1.19_TO_v1.20.sql`
 
-## Branding PWA
-Settings -> Icon & Logo PWA. Rekomendasi 512x512 px, PNG/WebP, maks 2 MB. Media Library menyimpan gambar yang sudah pernah di-upload dan mencegah duplikasi file identik.
+Patch v1.20 memperbaiki error PostgreSQL `42P13 cannot change return type of existing function` pada fungsi Family Invite. Migration dibuat aman untuk kondisi v1.19 yang sebelumnya gagal/berhenti sebagian.
+
+## EDGE FUNCTION
+Tidak perlu redeploy untuk patch SQL v1.20 ini.

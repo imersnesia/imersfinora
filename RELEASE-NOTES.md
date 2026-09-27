@@ -1,7 +1,17 @@
-# v1.17
-- Settings baru: Icon & Logo PWA.
-- Upload icon 1:1 dengan rekomendasi 512x512 px.
-- Media Library menampilkan semua icon yang pernah di-upload.
-- File identik dideteksi dengan SHA-256 sehingga tidak diduplikasi.
-- Icon lama bisa dipilih kembali kapan saja tanpa upload ulang.
-- Icon aktif bisa diganti kapan saja; PWA yang sudah terpasang mungkin perlu install ulang agar cache icon diperbarui.
+# iMersFinora v1.20
+
+## Critical SQL migration fix
+- Fix PostgreSQL error `42P13: cannot change return type of existing function` on `invite_family_member(uuid,text,app_role)`.
+- Migration now drops the exact old function signature before recreating it with JSONB return type.
+- v1.19 -> v1.20 migration is idempotent/recovery-safe for a failed or partially executed v1.19 migration.
+- Fresh installer master SQL is corrected with the same return-type transition fix.
+
+## Install rules
+### Client baru
+Run ONE file only: `supabase/install/00_FULL_FRESH_INSTALL_IMERSFINORA.sql`.
+
+### Existing v1.19 / failed v1.19 migration
+Run: `supabase/upgrade/UPGRADE_v1.19_TO_v1.20.sql`.
+
+### Edge Function
+No redeploy required for this SQL-only correction.
