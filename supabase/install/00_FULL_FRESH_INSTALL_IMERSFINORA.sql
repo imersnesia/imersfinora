@@ -758,3 +758,6 @@ grant execute on function public.update_family_member(uuid,uuid,public.app_role,
 grant execute on function public.remove_family_member(uuid,uuid) to authenticated;
 grant execute on function public.cancel_family_invite(uuid,uuid) to authenticated;
 grant execute on function public.regenerate_family_invite(uuid,uuid) to authenticated;
+
+-- v1.21: categories are database-driven and reports read existing transaction data.
+-- Fresh install requires no additional SQL beyond this master file.
